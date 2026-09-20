@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnmeldenRouteImport } from './routes/anmelden'
+import { Route as GlossarIdRouteImport } from './routes/glossar.$id'
 import { Route as LernenIndexRouteImport } from './routes/lernen.index'
+import { Route as LernenIdRouteImport } from './routes/lernen.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,39 +25,58 @@ const AnmeldenRoute = AnmeldenRouteImport.update({
   path: '/anmelden',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossarIdRoute = GlossarIdRouteImport.update({
+  id: '/glossar/$id',
+  path: '/glossar/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LernenIndexRoute = LernenIndexRouteImport.update({
   id: '/lernen/',
   path: '/lernen/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LernenIdRoute = LernenIdRouteImport.update({
+  id: '/lernen/$id',
+  path: '/lernen/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anmelden': typeof AnmeldenRoute
+  '/glossar/$id': typeof GlossarIdRoute
+  '/lernen/$id': typeof LernenIdRoute
   '/lernen/': typeof LernenIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anmelden': typeof AnmeldenRoute
+  '/glossar/$id': typeof GlossarIdRoute
+  '/lernen/$id': typeof LernenIdRoute
   '/lernen': typeof LernenIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/anmelden': typeof AnmeldenRoute
+  '/glossar/$id': typeof GlossarIdRoute
+  '/lernen/$id': typeof LernenIdRoute
   '/lernen/': typeof LernenIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anmelden' | '/lernen/'
+  fullPaths: '/' | '/anmelden' | '/glossar/$id' | '/lernen/$id' | '/lernen/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anmelden' | '/lernen'
-  id: '__root__' | '/' | '/anmelden' | '/lernen/'
+  to: '/' | '/anmelden' | '/glossar/$id' | '/lernen/$id' | '/lernen'
+  id:
+    '__root__' | '/' | '/anmelden' | '/glossar/$id' | '/lernen/$id' | '/lernen/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnmeldenRoute: typeof AnmeldenRoute
+  GlossarIdRoute: typeof GlossarIdRoute
+  LernenIdRoute: typeof LernenIdRoute
   LernenIndexRoute: typeof LernenIndexRoute
 }
 
@@ -75,11 +96,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnmeldenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/glossar/$id': {
+      id: '/glossar/$id'
+      path: '/glossar/$id'
+      fullPath: '/glossar/$id'
+      preLoaderRoute: typeof GlossarIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lernen/': {
       id: '/lernen/'
       path: '/lernen'
       fullPath: '/lernen/'
       preLoaderRoute: typeof LernenIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lernen/$id': {
+      id: '/lernen/$id'
+      path: '/lernen/$id'
+      fullPath: '/lernen/$id'
+      preLoaderRoute: typeof LernenIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,6 +123,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnmeldenRoute: AnmeldenRoute,
+  GlossarIdRoute: GlossarIdRoute,
+  LernenIdRoute: LernenIdRoute,
   LernenIndexRoute: LernenIndexRoute,
 }
 export const routeTree = rootRouteImport
