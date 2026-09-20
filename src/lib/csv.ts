@@ -39,13 +39,14 @@ export function parseCsv(text: string): CsvRow[] {
   const lines = clean.split("\n").filter((l) => l.trim().length > 0);
   if (lines.length === 0) return [];
 
-  const first = lines[0];
-  const delimiter = [";", "\t", ","]
-    .map((d) => ({ d, count: first.split(d).length }))
-    .sort((a, b) => b.count - a.count)[0].d;
+  const first = lines[0] ?? "";
+  const delimiter =
+    [";", "\t", ","]
+      .map((d) => ({ d, count: first.split(d).length }))
+      .sort((a, b) => b.count - a.count)[0]?.d ?? ",";
 
   const rows = lines.map((l) => splitLine(l, delimiter));
-  const head = rows[0].map((h) => h.toLowerCase());
+  const head = (rows[0] ?? []).map((h) => h.toLowerCase());
   const looksLikeHeader =
     head.some((h) => h.startsWith("deutsch") || h === "de") &&
     head.some((h) => h.startsWith("rum") || h === "ro");
