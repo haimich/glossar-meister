@@ -5,7 +5,7 @@ function splitLine(line: string, delimiter: string): string[] {
   let cur = "";
   let quoted = false;
   for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
+    const ch = line[i] as string;
     if (quoted) {
       if (ch === '"') {
         if (line[i + 1] === '"') {
