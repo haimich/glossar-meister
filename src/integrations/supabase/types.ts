@@ -14,7 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      card_progress: {
+        Row: {
+          direction: string
+          due_at: string
+          id: string
+          level: number
+          term_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          direction: string
+          due_at?: string
+          id?: string
+          level?: number
+          term_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          direction?: string
+          due_at?: string
+          id?: string
+          level?: number
+          term_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_progress_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "terms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      glossaries: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          subject: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          subject?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          subject?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      terms: {
+        Row: {
+          created_at: string
+          de: string
+          glossary_id: string
+          id: string
+          notes: string
+          ro: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          de: string
+          glossary_id: string
+          id?: string
+          notes?: string
+          ro: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          de?: string
+          glossary_id?: string
+          id?: string
+          notes?: string
+          ro?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "terms_glossary_id_fkey"
+            columns: ["glossary_id"]
+            isOneToOne: false
+            referencedRelation: "glossaries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

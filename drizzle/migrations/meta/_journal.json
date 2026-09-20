@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789938106320,
+      "tag": "0000_create_glossary_schema",
+      "breakpoints": true
+    }
+  ]
 }
