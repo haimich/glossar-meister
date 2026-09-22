@@ -251,38 +251,44 @@ function LernModus() {
           </section>
         ) : (
           <>
-            <section className="glass-soft mt-5 flex-1 rounded-3xl p-6">
-              <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-                {direction === "de_ro" ? "Deutsch" : "Rumänisch"}
-              </p>
-              <p className="mt-2 font-display text-3xl font-semibold leading-tight">{front}</p>
+            <section className="glass-soft mt-5 flex min-h-[24rem] flex-1 flex-col items-center justify-center rounded-3xl p-6 text-center sm:min-h-[30rem]">
+              <div className="w-full">
+                <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+                  {direction === "de_ro" ? "Deutsch" : "Rumänisch"}
+                </p>
+                <p className="mt-3 font-display text-5xl font-semibold leading-tight sm:text-6xl">
+                  {front}
+                </p>
 
-              {!revealed ? (
-                <button
-                  onClick={() => setRevealed(true)}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-card/80 px-4 py-2 text-sm font-medium text-primary shadow-sm ring-1 ring-primary/10"
-                >
-                  Karte anzeigen
-                </button>
-              ) : (
-                <>
-                  <div className="my-5 border-t border-dashed border-foreground/10" />
-                  <p className="text-xs font-medium uppercase tracking-[0.15em] text-accent">
-                    {direction === "de_ro" ? "Rumänisch" : "Deutsch"}
-                  </p>
-                  <p className="mt-2 font-display text-2xl font-semibold leading-tight">{back}</p>
-                  {card.notes && (
-                    <div className="mt-4 rounded-xl bg-primary/5 p-3.5 ring-1 ring-primary/10">
-                      <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Notizen
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-foreground/80">
-                        {card.notes}
-                      </p>
-                    </div>
-                  )}
-                </>
-              )}
+                {!revealed ? (
+                  <button
+                    onClick={() => setRevealed(true)}
+                    className="mt-8 inline-flex items-center gap-2 rounded-xl bg-card/80 px-4 py-2 text-sm font-medium text-primary shadow-sm ring-1 ring-primary/10"
+                  >
+                    Karte anzeigen
+                  </button>
+                ) : (
+                  <>
+                    <div className="mx-auto my-7 max-w-sm border-t border-dashed border-foreground/10" />
+                    <p className="text-xs font-medium uppercase tracking-[0.15em] text-accent">
+                      {direction === "de_ro" ? "Rumänisch" : "Deutsch"}
+                    </p>
+                    <p className="mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                      {back}
+                    </p>
+                    {card.notes && (
+                      <div className="mx-auto mt-6 max-w-md rounded-xl bg-primary/5 p-3.5 ring-1 ring-primary/10">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                          Notizen
+                        </p>
+                        <p className="mt-1 text-base leading-relaxed text-foreground/80">
+                          {card.notes}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </section>
 
             <div className="mt-4 flex items-center gap-3">
