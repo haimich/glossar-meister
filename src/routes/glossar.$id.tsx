@@ -4,6 +4,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { parseCsv } from "@/lib/csv";
+import { intervalLabel } from "@/lib/learning";
 
 export const Route = createFileRoute("/glossar/$id")({
   head: () => ({
@@ -26,6 +27,8 @@ export const Route = createFileRoute("/glossar/$id")({
 });
 
 type Term = { id: string; de: string; ro: string; notes: string };
+type Direction = "de_ro" | "ro_de";
+type ProgressRow = { term_id: string; direction: Direction; level: number };
 
 function GlossarDetail() {
   const { id } = Route.useParams();
@@ -62,8 +65,29 @@ function GlossarDetail() {
     },
   });
 
+  const { data: progress = [] } = useQuery({
+    queryKey: ["progress", id],
+    enabled: terms.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("card_progress")
+        .select("term_id, direction, level, terms!inner(glossary_id)")
+        .eq("terms.glossary_id", id);
+      if (error) throw error;
+      return data as unknown as ProgressRow[];
+    },
+  });
+
+  const levelsByTerm = new Map<string, Partial<Record<Direction, number>>>();
+  for (const p of progress) {
+    const entry = levelsByTerm.get(p.term_id) ?? {};
+    entry[p.direction] = p.level;
+    levelsByTerm.set(p.term_id, entry);
+  }
+
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["terms", id] });
+    qc.invalidateQueries({ queryKey: ["progress", id] });
     qc.invalidateQueries({ queryKey: ["glossaries"] });
   };
 
@@ -207,7 +231,8 @@ function GlossarDetail() {
             <div className="hidden grid-cols-12 gap-3 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:grid">
               <span className="col-span-3">Deutsch</span>
               <span className="col-span-3">Rumänisch</span>
-              <span className="col-span-4">Notizen</span>
+              <span className="col-span-2">Notizen</span>
+              <span className="col-span-2">Stufe</span>
               <span className="col-span-2 text-right">Aktionen</span>
             </div>
             {terms.map((t) =>
@@ -224,7 +249,7 @@ function GlossarDetail() {
                     onChange={(e) => setDraft({ ...draft, ro: e.target.value })}
                   />
                   <input
-                    className="field sm:col-span-4"
+                    className="field sm:col-span-2"
                     value={draft.notes}
                     onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
                   />
@@ -253,7 +278,29 @@ function GlossarDetail() {
                 >
                   <p className="font-display text-[15px] font-semibold sm:col-span-3">{t.de}</p>
                   <p className="text-sm sm:col-span-3">{t.ro}</p>
-                  <p className="text-sm text-muted-foreground sm:col-span-4">{t.notes}</p>
+                  <p className="text-sm text-muted-foreground sm:col-span-2">{t.notes}</p>
+                  <div className="flex flex-wrap gap-1.5 sm:col-span-2">
+                    {(["de_ro", "ro_de"] as const).map((d) => {
+                      const lvl = levelsByTerm.get(t.id)?.[d];
+                      return (
+                        <span
+                          key={d}
+                          title={
+                            lvl !== undefined
+                              ? `Nächste Wiederholung in ${intervalLabel(lvl)}`
+                              : "Noch nicht gelernt"
+                          }
+                          className={
+                            lvl === undefined
+                              ? "rounded-full bg-card/70 px-2 py-0.5 text-[11px] font-medium text-muted-foreground ring-1 ring-black/5"
+                              : "rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary"
+                          }
+                        >
+                          {d === "de_ro" ? "DE→RO" : "RO→DE"} {lvl ?? "–"}
+                        </span>
+                      );
+                    })}
+                  </div>
                   <div className="mt-1 flex gap-3 sm:col-span-2 sm:mt-0 sm:justify-end">
                     <button
                       className="text-xs font-medium text-primary hover:underline"
