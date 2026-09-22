@@ -32,6 +32,7 @@ function GlossarDetail() {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<Term | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Term | null>(null);
   const [newTerm, setNewTerm] = useState({ de: "", ro: "", notes: "" });
   const [importInfo, setImportInfo] = useState<string | null>(null);
 
@@ -86,7 +87,10 @@ function GlossarDetail() {
       const { error } = await supabase.from("terms").delete().eq("id", termId);
       if (error) throw error;
     },
-    onSuccess: invalidate,
+    onSuccess: () => {
+      setPendingDelete(null);
+      invalidate();
+    },
   });
 
   const addTerm = useMutation({
@@ -262,7 +266,7 @@ function GlossarDetail() {
                     </button>
                     <button
                       className="text-xs font-medium text-destructive hover:underline"
-                      onClick={() => deleteTerm.mutate(t.id)}
+                      onClick={() => setPendingDelete(t)}
                     >
                       Löschen
                     </button>
@@ -273,6 +277,43 @@ function GlossarDetail() {
           </div>
         )}
       </section>
+
+      {pendingDelete && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-foreground/20 px-4 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPendingDelete(null);
+          }}
+        >
+          <section
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+            aria-describedby="delete-description"
+            className="glass w-full max-w-md rounded-2xl p-5 shadow-xl"
+          >
+            <h2 id="delete-title" className="font-display text-lg font-semibold">
+              Begriff löschen?
+            </h2>
+            <p id="delete-description" className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              „{pendingDelete.de}“ wird dauerhaft aus diesem Glossar gelöscht.
+            </p>
+            <div className="mt-5 flex justify-end gap-2.5">
+              <button className="btn-ghost" onClick={() => setPendingDelete(null)}>
+                Abbrechen
+              </button>
+              <button
+                className="rounded-xl bg-destructive px-4 py-2.5 text-sm font-semibold text-destructive-foreground disabled:opacity-55"
+                disabled={deleteTerm.isPending}
+                onClick={() => deleteTerm.mutate(pendingDelete.id)}
+              >
+                Löschen
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </AppShell>
   );
 }

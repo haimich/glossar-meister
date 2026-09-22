@@ -47,7 +47,6 @@ function GlossarePage() {
   const [showNew, setShowNew] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [name, setName] = useState("");
-  const [subject, setSubject] = useState("");
   const [importTarget, setImportTarget] = useState("");
   const [importInfo, setImportInfo] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -71,12 +70,11 @@ function GlossarePage() {
       if (!uid) throw new Error("Nicht angemeldet");
       const { error } = await supabase
         .from("glossaries")
-        .insert({ name, subject: subject || null, user_id: uid });
+        .insert({ name, subject: null, user_id: uid });
       if (error) throw error;
     },
     onSuccess: () => {
       setName("");
-      setSubject("");
       setShowNew(false);
       qc.invalidateQueries({ queryKey: ["glossaries"] });
     },
@@ -142,23 +140,14 @@ function GlossarePage() {
       {showNew && (
         <section className="glass mt-5 rounded-3xl p-5">
           <h2 className="font-display text-lg font-semibold">Neues Glossar</h2>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="mt-3 max-w-xl">
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Name</label>
+              <label className="text-xs font-medium text-muted-foreground">Kunde</label>
               <input
                 className="field mt-1"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="z. B. MedSana Kliniken"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Fachgebiet</label>
-              <input
-                className="field mt-1"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="z. B. Medizin"
               />
             </div>
           </div>
