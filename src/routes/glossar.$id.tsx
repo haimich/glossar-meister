@@ -26,6 +26,8 @@ export const Route = createFileRoute("/glossar/$id")({
 });
 
 type Term = { id: string; de: string; ro: string; notes: string };
+type Direction = "de_ro" | "ro_de";
+type ProgressRow = { term_id: string; direction: Direction; level: number };
 
 function GlossarDetail() {
   const { id } = Route.useParams();
@@ -62,8 +64,29 @@ function GlossarDetail() {
     },
   });
 
+  const { data: progress = [] } = useQuery({
+    queryKey: ["progress", id],
+    enabled: terms.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("card_progress")
+        .select("term_id, direction, level, terms!inner(glossary_id)")
+        .eq("terms.glossary_id", id);
+      if (error) throw error;
+      return data as unknown as ProgressRow[];
+    },
+  });
+
+  const levelsByTerm = new Map<string, Partial<Record<Direction, number>>>();
+  for (const p of progress) {
+    const entry = levelsByTerm.get(p.term_id) ?? {};
+    entry[p.direction] = p.level;
+    levelsByTerm.set(p.term_id, entry);
+  }
+
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["terms", id] });
+    qc.invalidateQueries({ queryKey: ["progress", id] });
     qc.invalidateQueries({ queryKey: ["glossaries"] });
   };
 
