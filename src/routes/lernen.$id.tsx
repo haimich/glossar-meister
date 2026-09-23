@@ -192,6 +192,15 @@ function LernModus() {
   const front = card ? (direction === "de_ro" ? card.de : card.ro) : "";
   const back = card ? (direction === "de_ro" ? card.ro : card.de) : "";
 
+  // Lange Begriffe (z. B. „Abwasseraufbereitung") kleiner darstellen,
+  // damit sie nicht aus der Karte herausragen.
+  const sizeClass = (text: string) => {
+    const longest = Math.max(...text.split(/\s+/).map((w) => w.length));
+    if (longest > 18) return "text-2xl sm:text-4xl";
+    if (longest > 10) return "text-4xl sm:text-5xl";
+    return "text-5xl sm:text-6xl";
+  };
+
   return (
     <PageBackground>
       <div className="relative mx-auto flex min-h-screen max-w-xl flex-col px-4 py-5">
@@ -256,7 +265,9 @@ function LernModus() {
                 <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
                   {direction === "de_ro" ? "Deutsch" : "Rumänisch"}
                 </p>
-                <p className="mt-3 font-display text-5xl font-semibold leading-tight sm:text-6xl">
+                <p
+                  className={`mt-3 hyphens-auto font-display font-semibold leading-tight [overflow-wrap:anywhere] ${sizeClass(front)}`}
+                >
                   {front}
                 </p>
 
@@ -273,7 +284,9 @@ function LernModus() {
                     <p className="text-xs font-medium uppercase tracking-[0.15em] text-accent">
                       {direction === "de_ro" ? "Rumänisch" : "Deutsch"}
                     </p>
-                    <p className="mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                    <p
+                      className={`mt-3 hyphens-auto font-display font-semibold leading-tight [overflow-wrap:anywhere] ${sizeClass(back)}`}
+                    >
                       {back}
                     </p>
                     {card.notes && (
