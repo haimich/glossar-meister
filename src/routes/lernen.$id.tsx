@@ -283,7 +283,9 @@ function LernModus() {
                     <p className="text-xs font-medium uppercase tracking-[0.15em] text-accent">
                       {direction === "de_ro" ? "Rumänisch" : "Deutsch"}
                     </p>
-                    <p className="mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                    <p
+                      className={`mt-3 hyphens-auto font-display font-semibold leading-tight [overflow-wrap:anywhere] ${sizeClass(back)}`}
+                    >
                       {back}
                     </p>
                     {card.notes && (
