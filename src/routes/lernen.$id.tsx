@@ -192,6 +192,14 @@ function LernModus() {
   const front = card ? (direction === "de_ro" ? card.de : card.ro) : "";
   const back = card ? (direction === "de_ro" ? card.ro : card.de) : "";
 
+  // Lange Begriffe (z. B. „Abwasseraufbereitung") kleiner darstellen,
+  // damit sie nicht aus der Karte herausragen.
+  const sizeClass = (text: string) => {
+    if (text.length > 20) return "text-3xl sm:text-4xl";
+    if (text.length > 12) return "text-4xl sm:text-5xl";
+    return "text-5xl sm:text-6xl";
+  };
+
   return (
     <PageBackground>
       <div className="relative mx-auto flex min-h-screen max-w-xl flex-col px-4 py-5">
