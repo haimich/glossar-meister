@@ -264,7 +264,9 @@ function LernModus() {
                 <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
                   {direction === "de_ro" ? "Deutsch" : "Rumänisch"}
                 </p>
-                <p className="mt-3 font-display text-5xl font-semibold leading-tight sm:text-6xl">
+                <p
+                  className={`mt-3 hyphens-auto font-display font-semibold leading-tight [overflow-wrap:anywhere] ${sizeClass(front)}`}
+                >
                   {front}
                 </p>
 
