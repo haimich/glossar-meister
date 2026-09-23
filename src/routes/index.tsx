@@ -108,16 +108,16 @@ function GlossarePage() {
 
   return (
     <AppShell>
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+      <header className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+        <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
             Kundenbereich
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight">Glossare</h1>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5 sm:flex sm:items-center">
           <button
-            className="btn-ghost"
+            className="btn-ghost min-w-0 px-3"
             onClick={() => {
               setShowImport((v) => !v);
               setShowNew(false);
@@ -126,7 +126,7 @@ function GlossarePage() {
             CSV importieren
           </button>
           <button
-            className="btn-primary"
+            className="btn-primary min-w-0 px-3"
             onClick={() => {
               setShowNew((v) => !v);
               setShowImport(false);
@@ -217,21 +217,21 @@ function GlossarePage() {
           </p>
         </section>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {glossaries.map((g) => (
-            <div key={g.id} className="glass rounded-3xl p-5">
-              <div className="flex items-start justify-between">
-                <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-primary to-accent font-display text-sm font-semibold text-primary-foreground">
+            <div key={g.id} className="glass min-w-0 rounded-3xl p-5">
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
+                <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-accent font-display text-sm font-semibold text-primary-foreground">
                   {initials(g.name)}
                 </div>
-                <span className="rounded-full bg-card/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-black/5">
+                <span className="min-w-0 justify-self-end rounded-full bg-card/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground ring-1 ring-black/5">
                   {g.terms?.[0]?.count ?? 0} Begriffe
                 </span>
               </div>
               <Link
                 to="/glossar/$id"
                 params={{ id: g.id }}
-                className="mt-4 block font-display text-lg font-semibold hover:text-primary"
+                className="mt-4 block break-words font-display text-lg font-semibold hover:text-primary"
               >
                 {g.name}
               </Link>
