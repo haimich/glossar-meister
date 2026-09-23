@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { PageBackground } from "@/components/AppShell";
 import { useAuth } from "@/lib/useAuth";
 
@@ -59,17 +58,6 @@ function AnmeldenPage() {
     setBusy(false);
   }
 
-  async function google() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setMessage("Google-Anmeldung fehlgeschlagen.");
-      return;
-    }
-    if (result.redirected) return;
-    navigate({ to: "/" });
-  }
 
   return (
     <PageBackground>
@@ -122,11 +110,7 @@ function AnmeldenPage() {
             </button>
           </form>
 
-          <button onClick={google} className="btn-ghost mt-3 w-full">
-            Weiter mit Google
-          </button>
-
-          {message && <p className="mt-3 text-xs text-muted-foreground">{message}</p>}
+  {message && <p className="mt-3 text-xs text-muted-foreground">{message}</p>}
 
           <button
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
