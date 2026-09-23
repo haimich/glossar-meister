@@ -195,8 +195,8 @@ function LernModus() {
   // Lange Begriffe (z. B. „Abwasseraufbereitung") kleiner darstellen,
   // damit sie nicht aus der Karte herausragen.
   const sizeClass = (text: string) => {
-    if (text.length > 20) return "text-3xl sm:text-4xl";
-    if (text.length > 12) return "text-4xl sm:text-5xl";
+    if (text.length > 16) return "text-3xl sm:text-4xl";
+    if (text.length > 10) return "text-4xl sm:text-5xl";
     return "text-5xl sm:text-6xl";
   };
 
